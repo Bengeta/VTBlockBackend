@@ -32,7 +32,7 @@ builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddTransient<IUserService, UserService>();
 
 var connection = builder.Configuration.GetConnectionString("MainDB");
-//builder.Services.AddTransient<ApplicationContextSeeder>();
+builder.Services.AddTransient<ApplicationContextSeeder>();
 
 builder.Services.AddDbContext<ApplicationContext>(x => x.UseNpgsql(connection));
 
