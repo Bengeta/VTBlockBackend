@@ -7,10 +7,11 @@ using Microsoft.IdentityModel.Tokens;
 using VTBlockBackend.Enums;
 using VTBlockBackend.Interfaces;
 using VTBlockBackend.Models;
-using VecoBackend.Data;
-using VecoBackend.Models;
-using VecoBackend.Responses;
-using VecoBackend.Utils;
+using VTBlockBackend.Data;
+using VTBlockBackend.Models;
+using VTBlockBackend.Responses;
+using VTBlockBackend.Utils;
+using VTBlockBackend.Models.DBTables;
 
 namespace VTBlockBackend.Service;
 

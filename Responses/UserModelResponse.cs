@@ -1,4 +1,4 @@
-namespace VecoBackend.Responses;
+namespace VTBlockBackend.Responses;
 
 public class UserModelResponse
 {

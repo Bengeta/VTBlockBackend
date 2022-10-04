@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
-namespace VecoBackend.Utils;
+namespace VTBlockBackend.Utils;
 
 public class Hash
 {

@@ -7,8 +7,8 @@ using Microsoft.OpenApi.Models;
 using VTBlockBackend.Data;
 using VTBlockBackend.Interfaces;
 using VTBlockBackend.Service;
-using VecoBackend.Data;
-using VecoBackend.Models;
+using VTBlockBackend.Data;
+using VTBlockBackend.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -95,7 +95,7 @@ builder.Services.AddServerSideBlazor();
 var app = builder.Build();
 
 
-if (args.Length == 1)
+if (args.Length == 0)
     SeedData(app);
 
 //Seed Data

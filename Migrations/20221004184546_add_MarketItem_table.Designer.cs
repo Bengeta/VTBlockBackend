@@ -11,8 +11,8 @@ using VTBlockBackend.Data;
 namespace VTBlockBackend.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20220920092359_Add_UserTable")]
-    partial class Add_UserTable
+    [Migration("20221004184546_add_MarketItem_table")]
+    partial class add_MarketItem_table
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,7 +23,7 @@ namespace VTBlockBackend.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("VTBlockBackend.Models.UserModel", b =>
+            modelBuilder.Entity("VTBlockBackend.Models.DBTables.UserModel", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -60,6 +60,49 @@ namespace VTBlockBackend.Migrations
                         .IsUnique();
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("VTBlockBackend.Models.MarketItemModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("MarketItem");
+                });
+
+            modelBuilder.Entity("VTBlockBackend.Models.MarketItemModel", b =>
+                {
+                    b.HasOne("VTBlockBackend.Models.MarketItemModel", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,8 +1,6 @@
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
-namespace VecoBackend.Models;
+namespace VTBlockBackend.Models.DBTables;
 
 [Table("User")]
 public class UserModel
@@ -18,4 +16,6 @@ public class UserModel
     public string salt { get; set; }
 
     public string username { get; set; }
+    
+    public List<UserTask> UserTasks { get; set; }
 }

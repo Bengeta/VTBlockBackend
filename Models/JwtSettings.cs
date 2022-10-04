@@ -1,4 +1,4 @@
-namespace VecoBackend.Models;
+namespace VTBlockBackend.Models;
 
 public class JwtSettings
 {

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using VTBlockBackend.Data;
@@ -11,9 +12,10 @@ using VTBlockBackend.Data;
 namespace VTBlockBackend.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20221004194333_add_marketItem_image_tables")]
+    partial class add_marketItem_image_tables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,29 +62,6 @@ namespace VTBlockBackend.Migrations
                     b.HasIndex("MarketItemId");
 
                     b.ToTable("MarketItemImage");
-                });
-
-            modelBuilder.Entity("VTBlockBackend.Models.DBTables.MarketItemTagModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("MarketItemId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("TagId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MarketItemId");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("MarketItemTag");
                 });
 
             modelBuilder.Entity("VTBlockBackend.Models.DBTables.TagModel", b =>
@@ -154,35 +133,14 @@ namespace VTBlockBackend.Migrations
                     b.Property<int>("Reward")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id");
-
-                    b.ToTable("Task");
-                });
-
-            modelBuilder.Entity("VTBlockBackend.Models.DBTables.TaskTagModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
                     b.Property<int>("TagId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("TaskId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("TaskModelId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("TagId");
 
-                    b.HasIndex("TaskModelId");
-
-                    b.ToTable("TaskTag");
+                    b.ToTable("Task");
                 });
 
             modelBuilder.Entity("VTBlockBackend.Models.DBTables.UserModel", b =>
@@ -255,7 +213,7 @@ namespace VTBlockBackend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Category")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Description")
@@ -273,6 +231,8 @@ namespace VTBlockBackend.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("MarketItem");
                 });
@@ -296,25 +256,6 @@ namespace VTBlockBackend.Migrations
                     b.Navigation("MarketItem");
                 });
 
-            modelBuilder.Entity("VTBlockBackend.Models.DBTables.MarketItemTagModel", b =>
-                {
-                    b.HasOne("VTBlockBackend.Models.MarketItemModel", "MarketItem")
-                        .WithMany()
-                        .HasForeignKey("MarketItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("VTBlockBackend.Models.DBTables.TagModel", "Tag")
-                        .WithMany("MarketItemTag")
-                        .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("MarketItem");
-
-                    b.Navigation("Tag");
-                });
-
             modelBuilder.Entity("VTBlockBackend.Models.DBTables.TaskImage", b =>
                 {
                     b.HasOne("VTBlockBackend.Models.DBTables.ImageStorage", "Image")
@@ -334,23 +275,15 @@ namespace VTBlockBackend.Migrations
                     b.Navigation("Task");
                 });
 
-            modelBuilder.Entity("VTBlockBackend.Models.DBTables.TaskTagModel", b =>
+            modelBuilder.Entity("VTBlockBackend.Models.DBTables.TaskModel", b =>
                 {
                     b.HasOne("VTBlockBackend.Models.DBTables.TagModel", "Tag")
-                        .WithMany("TaskTag")
+                        .WithMany("Tasks")
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("VTBlockBackend.Models.DBTables.TaskModel", "TaskModel")
-                        .WithMany()
-                        .HasForeignKey("TaskModelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Tag");
-
-                    b.Navigation("TaskModel");
                 });
 
             modelBuilder.Entity("VTBlockBackend.Models.DBTables.UserTask", b =>
@@ -372,6 +305,17 @@ namespace VTBlockBackend.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("VTBlockBackend.Models.MarketItemModel", b =>
+                {
+                    b.HasOne("VTBlockBackend.Models.MarketItemModel", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
             modelBuilder.Entity("VTBlockBackend.Models.DBTables.ImageStorage", b =>
                 {
                     b.Navigation("MarketItemImages");
@@ -381,9 +325,7 @@ namespace VTBlockBackend.Migrations
 
             modelBuilder.Entity("VTBlockBackend.Models.DBTables.TagModel", b =>
                 {
-                    b.Navigation("MarketItemTag");
-
-                    b.Navigation("TaskTag");
+                    b.Navigation("Tasks");
                 });
 
             modelBuilder.Entity("VTBlockBackend.Models.DBTables.TaskModel", b =>

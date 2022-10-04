@@ -1,4 +1,4 @@
-namespace VecoBackend.Requests;
+namespace VTBlockBackend.Requests;
 
 public class AddTokenDeviceRequest
 {
