@@ -21,7 +21,7 @@ public class UserController:BaseController
     }
     
     [AllowAnonymous]
-    [HttpPost("auth/signup")]
+    [HttpPost("api/auth/signup")]
     public async Task<ResponseModel<string>> SignUp(SignUpRequest request)
     {
         return await _userService.SignUp(request.name, request.password, request.email);

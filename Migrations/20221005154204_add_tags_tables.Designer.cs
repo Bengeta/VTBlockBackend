@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using VTBlockBackend.Data;
@@ -11,9 +12,10 @@ using VTBlockBackend.Data;
 namespace VTBlockBackend.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20221005154204_add_tags_tables")]
+    partial class add_tags_tables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,34 +23,6 @@ namespace VTBlockBackend.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("VTBlockBackend.Models.DBTables.Check", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<double>("Amount")
-                        .HasColumnType("double precision");
-
-                    b.Property<string>("CheckHash")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CheckHash")
-                        .IsUnique();
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Check");
-                });
 
             modelBuilder.Entity("VTBlockBackend.Models.DBTables.ImageStorage", b =>
                 {
@@ -325,17 +299,6 @@ namespace VTBlockBackend.Migrations
                     b.ToTable("MarketItem");
                 });
 
-            modelBuilder.Entity("VTBlockBackend.Models.DBTables.Check", b =>
-                {
-                    b.HasOne("VTBlockBackend.Models.DBTables.UserModel", "User")
-                        .WithMany("Checks")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("VTBlockBackend.Models.DBTables.MarketItemImage", b =>
                 {
                     b.HasOne("VTBlockBackend.Models.MarketItemModel", "MarketItem")
@@ -475,8 +438,6 @@ namespace VTBlockBackend.Migrations
 
             modelBuilder.Entity("VTBlockBackend.Models.DBTables.UserModel", b =>
                 {
-                    b.Navigation("Checks");
-
                     b.Navigation("UserMarketItems");
 
                     b.Navigation("UserTasks");

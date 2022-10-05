@@ -15,4 +15,7 @@ public class MarketItemModel
     public int Quantity { get; set; }
     public MarketItemCategory Category { get; set; }
     public List<MarketItemImage> MarketItemImages { get; set; }
+    
+    public List<UserMarketItem> UserMarketItems { get; set; }
+    public List<MarketItemTagModel> MarketItemTags { get; set; }
 }

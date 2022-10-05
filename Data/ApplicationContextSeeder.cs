@@ -34,6 +34,14 @@ public class ApplicationContextSeeder
             var pas = Hash.GenerateHash("asdf");
             users.Add(new UserModel()
             {
+                username = "Ilya",
+                token = "qwe",
+                password = pas.Key,
+                salt = pas.Value,
+                email = "ilya@"
+            });
+            users.Add(new UserModel()
+            {
                 username = "gsanov",
                 token = "asdf",
                 password = pas.Key,
@@ -75,7 +83,16 @@ public class ApplicationContextSeeder
                 Reward = 123,
                 CreatedBy = "gsanov",
                 CreatedDate = DateTime.Now,
-                DeadLine = DateTime.Now.AddDays(1),
+                DeadLine = DateTime.Now.AddDays(2),
+            });
+            Task.Add(new TaskModel()
+            {
+                Name = "Task3",
+                Description = "Task3",
+                Reward = 123,
+                CreatedBy = "gsanov",
+                CreatedDate = DateTime.Now,
+                DeadLine = DateTime.Now.AddDays(3),
             });
         }
 
@@ -149,5 +166,151 @@ public class ApplicationContextSeeder
         
         _applicationContext.MarketItem.AddRange(marketItems);
         _applicationContext.SaveChanges();
+        
+        var userMarketItems = new List<UserMarketItem>()
+        {
+            new UserMarketItem()
+            {
+                UserId = users[^1].id,
+                MarketItemId = marketItems[^1].Id,
+            },
+            new UserMarketItem()
+            {
+                UserId = users[^1].id,
+                MarketItemId = marketItems[^2].Id,
+            },
+            new UserMarketItem()
+            {
+                UserId = users[^1].id,
+                MarketItemId = marketItems[^3].Id,
+            },
+        };
+        _applicationContext.UserMarketItems.AddRange(userMarketItems);
+        
+        var userTasks = new List<UserTask>()
+        {
+            new UserTask()
+            {
+                UserId = users[^1].id,
+                TaskId = Task[^1].Id,
+            },
+            new UserTask()
+            {
+                UserId = users[^1].id,
+                TaskId = Task[^2].Id,
+            },
+            new UserTask()
+            {
+                UserId = users[^1].id,
+                TaskId = Task[^3].Id,
+            },
+        };
+        _applicationContext.UserTask.AddRange(userTasks);
+        
+        var marketItemImages = new List<MarketItemImage>()
+        {
+            new MarketItemImage()
+            {
+                MarketItemId = marketItems[^1].Id,
+                ImageId = photos[^1].Id,
+            },
+            new MarketItemImage()
+            {
+                MarketItemId = marketItems[^2].Id,
+                ImageId = photos[^2].Id,
+            },
+            new MarketItemImage()
+            {
+                MarketItemId = marketItems[^3].Id,
+                ImageId = photos[^3].Id,
+            },
+        };
+        _applicationContext.MarketItemImage.AddRange(marketItemImages);
+        
+        var taskImages = new List<TaskImage>()
+        {
+            new TaskImage()
+            {
+                TaskId = Task[^1].Id,
+                ImageId = photos[^1].Id,
+            },
+            new TaskImage()
+            {
+                TaskId = Task[^2].Id,
+                ImageId = photos[^2].Id,
+            },
+            new TaskImage()
+            {
+                TaskId = Task[^3].Id,
+                ImageId = photos[^3].Id,
+            },
+        };
+        _applicationContext.TaskImage.AddRange(taskImages);
+        
+        var taskTag = new List<TaskTagModel>()
+        {
+            new TaskTagModel()
+            {
+                TaskId = Task[^1].Id,
+                TagId = tags[^1].Id
+            },
+            new TaskTagModel()
+            {
+                TaskId = Task[^2].Id,
+                TagId = tags[^2].Id
+            },
+            new TaskTagModel()
+            {
+                TaskId = Task[^3].Id,
+                TagId = tags[^2].Id
+            },
+            new TaskTagModel()
+            {
+                TaskId = Task[^1].Id,
+                TagId = tags[^2].Id
+            },
+        };
+        _applicationContext.TaskTag.AddRange(taskTag);
+        
+        var marketItemTag = new List<MarketItemTagModel>()
+        {
+            new MarketItemTagModel()
+            {
+                MarketItemId = marketItems[^1].Id,
+                TagId = tags[^3].Id
+            },
+            new MarketItemTagModel()
+            {
+                MarketItemId = marketItems[^2].Id,
+                TagId = tags[^3].Id
+            },
+            new MarketItemTagModel()
+            {
+                MarketItemId = marketItems[^3].Id,
+                TagId = tags[^3].Id
+            },
+        };
+        _applicationContext.MarketItemTag.AddRange(marketItemTag);
+        _applicationContext.SaveChanges();
+        
+        
+        var checks = new List<Check>()
+        {
+            new Check()
+            {
+                UserId = users[^1].id,
+                CheckHash = Guid.NewGuid().ToString(),
+                Amount = 123123.34
+            },
+            new Check()
+            {
+                UserId = users[^2].id,
+                CheckHash = Guid.NewGuid().ToString(),
+                Amount = 12312334.34
+            },
+        };
+        _applicationContext.Check.AddRange(checks);
+        _applicationContext.SaveChanges();
+        
     }
 }
