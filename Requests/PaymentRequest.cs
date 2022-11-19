@@ -2,7 +2,7 @@ namespace VTBlockBackend.Requests;
 
 public class PaymentRequest
 {
-    public int Amount { get; set; }
-    public int IdFrom { get; set; }
-    public int IdTo { get; set; }
+    public double Amount { get; set; }
+    public int walletFrom { get; set; }
+    public int walletTo { get; set; }
 }

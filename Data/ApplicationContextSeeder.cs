@@ -77,23 +77,5 @@ public class ApplicationContextSeeder
             },
         };
 
-        var checks = new List<Check>()
-        {
-            new Check()
-            {
-                UserId = users[^1].id,
-                CheckHash = Guid.NewGuid().ToString(),
-                Amount = 123123.34
-            },
-            new Check()
-            {
-                UserId = users[^2].id,
-                CheckHash = Guid.NewGuid().ToString(),
-                Amount = 12312334.34
-            },
-        };
-        _applicationContext.Check.AddRange(checks);
-        _applicationContext.SaveChanges();
-        
     }
 }

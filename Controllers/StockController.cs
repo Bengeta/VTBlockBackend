@@ -6,7 +6,7 @@ namespace VTBlockBackend.Controllers;
 
 [ApiController]
 [Authorize]
-public class StockService:BaseController
+public class StockController:BaseController
 {
     
 }

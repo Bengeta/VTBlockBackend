@@ -56,14 +56,23 @@ public class WalletService : IWalletService
         {
             await using var context = new ApplicationContext(_configuration);
             var walletFrom =
-                await context.Wallet.FirstOrDefaultAsync(x => x.User.token == token && x.id == payments.IdFrom);
+                await context.Wallet.FirstOrDefaultAsync(x => x.User.token == token && x.id == payments.walletFrom);
             if (walletFrom == null)
                 return new ResponseModel<List<bool>>() {ResultCode = ResultCode.Failed};
-            var walletTo = await context.Wallet.FirstOrDefaultAsync(x => x.id == payments.IdTo);
+            var walletTo = await context.Wallet.FirstOrDefaultAsync(x => x.id == payments.walletTo);
             if (walletTo == null)
                 return new ResponseModel<List<bool>>() {ResultCode = ResultCode.Failed};
             walletFrom.Balance -= payments.Amount;
             walletTo.Balance += payments.Amount;
+            await context.SaveChangesAsync();
+            var transaction = new TransactionHistoryModel()
+            {
+                Amount = payments.Amount,
+                Date = DateTime.Now,
+                WalletFrom = payments.walletFrom,
+                WalletTo = payments.walletTo
+            };
+            await context.Transaction.AddAsync(transaction);
             await context.SaveChangesAsync();
             return new ResponseModel<List<bool>>() {ResultCode = ResultCode.Success};
         }

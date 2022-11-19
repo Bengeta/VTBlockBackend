@@ -17,13 +17,13 @@ public class ApplicationContext : DbContext
     
     public DbSet<ImageStorage> ImageStorage { get; set; }
     public DbSet<WalletModel> Wallet { get; set; }
+    public DbSet<TransactionHistoryModel> Transaction { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<UserModel>().HasIndex(u => u.email).IsUnique();
         modelBuilder.Entity<UserModel>().HasIndex(u => u.token).IsUnique();
-        modelBuilder.Entity<Check>().HasIndex(u => u.CheckHash).IsUnique();
         
         
         modelBuilder.Entity<WalletModel>().HasOne(x => x.User)
