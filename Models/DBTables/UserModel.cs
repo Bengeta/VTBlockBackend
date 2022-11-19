@@ -16,8 +16,5 @@ public class UserModel
     public string salt { get; set; }
 
     public string username { get; set; }
-    
-    public List<UserTask> UserTasks { get; set; }
-    public List<UserMarketItem> UserMarketItems { get; set; }
-    public List<Check> Checks { get; set; }
+    public List<WalletModel> WalletModels { get; set; }
 }
