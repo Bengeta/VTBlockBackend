@@ -7,7 +7,6 @@ using VTBlockBackend.Responses;
 namespace VTBlockBackend.Controllers;
 
 [ApiController]
-[Authorize]
 [Route("api/")]
 public class StockController : BaseController
 {

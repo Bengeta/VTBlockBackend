@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Service;
 using VTBlockBackend.Data;
 using VTBlockBackend.Interfaces;
 using VTBlockBackend.Service;
@@ -30,6 +31,8 @@ builder.Services.AddScoped<ProtectedSessionStorage>();
 
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IStockService, StockService>();
+builder.Services.AddTransient<IWalletService, WalletService>();
 
 var connection = builder.Configuration.GetConnectionString("MainDB");
 builder.Services.AddTransient<ApplicationContextSeeder>();
