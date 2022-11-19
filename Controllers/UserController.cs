@@ -11,6 +11,7 @@ namespace VTBlockBackend.Controllers;
 
 [ApiController]
 [Authorize]
+[Route("api/")]
 public class UserController:BaseController
 {
     private IUserService _userService;
@@ -21,7 +22,7 @@ public class UserController:BaseController
     }
     
     [AllowAnonymous]
-    [HttpPost("api/auth/signup")]
+    [HttpPost("auth/signup")]
     public async Task<ResponseModel<string>> SignUp(SignUpRequest request)
     {
         return await _userService.SignUp(request.name, request.password, request.email);

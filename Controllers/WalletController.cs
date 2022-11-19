@@ -9,6 +9,7 @@ namespace VTBlockBackend.Controllers;
 
 [ApiController]
 [Authorize]
+[Route("api/")]
 public class WalletController : BaseController
 {
     private readonly IWalletService _walletService;
