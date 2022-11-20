@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using VTBlockBackend.Interfaces;
 
 namespace VTBlockBackend.Models.DBTables;
 
@@ -10,4 +11,5 @@ public class WalletModel
     [ForeignKey("User")] public int UserId { get; set; }
     public UserModel? User { get; set; }
     public double Balance { get; set; }
+    public List<UserStocks> UserStocks { get; set; }
 }

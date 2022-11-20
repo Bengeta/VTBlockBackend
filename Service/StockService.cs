@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using VTBlockBackend.Data;
 using VTBlockBackend.Enums;
 using VTBlockBackend.Interfaces;
 using VTBlockBackend.Models;
@@ -9,6 +11,13 @@ namespace Service
 {
     public class StockService : IStockService
     {
+        private readonly IConfiguration _configuration;
+
+        public StockService(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public async Task<ResponseModel<PaginatedListModel<StockResponse>>> GetStocks(int page, int pageSize)
         {
             throw new NotImplementedException();
@@ -56,7 +65,7 @@ namespace Service
                 var quotes = new List<QuoteResponse>();
                 using var client = new HttpClient();
                 var key = "sLUa9Dzq59Tn9H32kA1UGQnZhW9bSXgr";
-                var url = "https://api.apilayer.com/fixer/latest?base=USD&symbols=EUR,GBP";
+                var url = "https://api.apilayer.com/fixer/latest?base=USD&symbols=EUR,GBP,RUB";
                 client.DefaultRequestHeaders.Add("ApiKey", key);
                 var response = await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, url));
 
@@ -72,6 +81,32 @@ namespace Service
             catch (Exception ex)
             {
                 return new ResponseModel<List<QuoteResponse>>() {ResultCode = ResultCode.Failed};
+            }
+        }
+
+        public async Task<ResponseModel<List<StockResponse>>> GetUserStocks(string token)
+        {
+            try
+            {
+                await using var context = new ApplicationContext(_configuration);
+                var res = new List<StockResponse>();
+                var stocks = await context.UserStocks.Where(x => x.Wallet.User.token == token).ToListAsync();
+                foreach (var stock in stocks)
+                {
+                    using var client = new HttpClient();
+                    var url = "https://iss.moex.com/iss/securities.json?limit=1&q=" + stock.SecId;
+                    var response = await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, url));
+                    var content = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<StockResponse>(content);
+                    res.Add(result);
+                }
+
+                return new ResponseModel<List<StockResponse>>() {ResultCode = ResultCode.Success, Data = res};
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return new ResponseModel<List<StockResponse>>() {ResultCode = ResultCode.Failed};
             }
         }
     }

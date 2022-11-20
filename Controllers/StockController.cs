@@ -35,4 +35,11 @@ public class StockController : BaseController
         return await _stockService.GetQuotes();
     }
     
+    [HttpGet("stocks/user")]
+    [Authorize]
+    public async Task<ResponseModel<List<StockResponse>>> GetUserStocks()
+    {
+        return await _stockService.GetUserStocks(Token());
+    }
+    
 }
