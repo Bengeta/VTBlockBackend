@@ -13,8 +13,8 @@ namespace VTBlockBackend.Interfaces
         public Task<ResponseModel<StockResponse>> UpdateStock(string token,int id,StockRequest request);
         public Task<ResponseModel<StockResponse>> DeleteStock(int Id);
         
-        public Task<ResponseModel<bool>> BuyStock(string token, int id, int quantity);
-        public Task<ResponseModel<bool>> SellStock(string token, int id, int quantity);
+        public Task<ResponseModel<bool>> BuyStock(string token,int walletId, int id, int quantity);
+        public Task<ResponseModel<bool>> SellStock(string token,int walletId, int id, int quantity);
         public Task<ResponseModel<List<QuoteResponse>>> GetQuotes();
         
         public Task<ResponseModel<List<StockResponse>>> GetUserStocks(string token);

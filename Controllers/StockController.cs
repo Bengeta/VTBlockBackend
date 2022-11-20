@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VTBlockBackend.Interfaces;
 using VTBlockBackend.Models;
+using VTBlockBackend.Requests;
 using VTBlockBackend.Responses;
 
 namespace VTBlockBackend.Controllers;
@@ -42,4 +43,17 @@ public class StockController : BaseController
         return await _stockService.GetUserStocks(Token());
     }
     
+    [HttpPut("stocks/user")]
+    [Authorize]
+    public async Task<ResponseModel<bool>> BuyStock(UseStockRequest request)
+    {
+        return await _stockService.BuyStock(Token(), request.WalletId, request.StockId, request.Quantity);
+    }
+    
+    [HttpPut("stocks/user")]
+    [Authorize]
+    public async Task<ResponseModel<bool>> SellStock(UseStockRequest request)
+    {
+        return await _stockService.SellStock(Token(), request.WalletId, request.StockId, request.Quantity);
+    }
 }

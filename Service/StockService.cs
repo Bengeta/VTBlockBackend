@@ -48,14 +48,96 @@ namespace Service
             throw new NotImplementedException();
         }
 
-        public Task<ResponseModel<bool>> BuyStock(string token, int id, int quantity)
+        public async Task<ResponseModel<bool>> BuyStock(string token, int walletId, int id, int quantity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await using var context = new ApplicationContext(_configuration);
+                var stock = await context.UserStocks.FirstOrDefaultAsync(
+                    x => x.id == id && x.Wallet.User.token == token);
+                if (stock == null)
+                {
+                    return new ResponseModel<bool>
+                    {
+                        Data = false, ResultCode = ResultCode.Failed
+                    };
+                }
+
+                var stock_ = await GetStock(stock.SecId);
+                var wallet = await context.Wallet.FirstOrDefaultAsync(x => x.id == walletId && x.User.token == token);
+                if (wallet == null)
+                {
+                    return new ResponseModel<bool>
+                    {
+                        Data = false, ResultCode = ResultCode.Failed
+                    };
+                }
+
+                wallet.Balance -= stock_.Price * quantity;
+                if (wallet.Balance < 0)
+                {
+                    return new ResponseModel<bool>
+                    {
+                        Data = false, ResultCode = ResultCode.Failed
+                    };
+                }
+
+                stock.Amount += quantity;
+                context.Wallet.Update(wallet);
+                await context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
-        public Task<ResponseModel<bool>> SellStock(string token, int id, int quantity)
+        public async Task<ResponseModel<bool>> SellStock(string token, int walletId, int id, int quantity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await using var context = new ApplicationContext(_configuration);
+                var stock = await context.UserStocks.FirstOrDefaultAsync(
+                    x => x.id == id && x.Wallet.User.token == token);
+                if (stock == null)
+                {
+                    return new ResponseModel<bool>
+                    {
+                        Data = false, ResultCode = ResultCode.Failed
+                    };
+                }
+
+                var stock_ = await GetStock(stock.SecId);
+                var wallet = await context.Wallet.FirstOrDefaultAsync(x => x.id == walletId && x.User.token == token);
+                if (wallet == null)
+                {
+                    return new ResponseModel<bool>
+                    {
+                        Data = false, ResultCode = ResultCode.Failed
+                    };
+                }
+
+                wallet.Balance += stock_.Price * quantity;
+                stock.Amount -= quantity;
+                if (stock.Amount < 0)
+                {
+                    return new ResponseModel<bool>
+                    {
+                        Data = false, ResultCode = ResultCode.Failed
+                    };
+                }
+
+                if (stock.Amount == 0)
+                    context.UserStocks.Remove(stock);
+                context.Wallet.Update(wallet);
+                await context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public async Task<ResponseModel<List<QuoteResponse>>> GetQuotes()
@@ -93,12 +175,8 @@ namespace Service
                 var stocks = await context.UserStocks.Where(x => x.Wallet.User.token == token).ToListAsync();
                 foreach (var stock in stocks)
                 {
-                    using var client = new HttpClient();
-                    var url = "https://iss.moex.com/iss/securities.json?limit=1&q=" + stock.SecId;
-                    var response = await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, url));
-                    var content = await response.Content.ReadAsStringAsync();
-                    var result = JsonConvert.DeserializeObject<StockResponse>(content);
-                    res.Add(result);
+                    var stock_ = await GetStock(stock.SecId);
+                    res.Add(stock_);
                 }
 
                 return new ResponseModel<List<StockResponse>>() {ResultCode = ResultCode.Success, Data = res};
@@ -108,6 +186,16 @@ namespace Service
                 Console.WriteLine(e);
                 return new ResponseModel<List<StockResponse>>() {ResultCode = ResultCode.Failed};
             }
+        }
+
+        private async Task<StockResponse> GetStock(string secid)
+        {
+            using var client = new HttpClient();
+            var url = "https://iss.moex.com/iss/securities.json?limit=1&q=" + secid;
+            var response = await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, url));
+            var content = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<StockResponse>(content);
+            return result;
         }
     }
 }
