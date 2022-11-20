@@ -85,6 +85,10 @@ namespace Service
                 stock.Amount += quantity;
                 context.Wallet.Update(wallet);
                 await context.SaveChangesAsync();
+                return new ResponseModel<bool>
+                {
+                    Data = true, ResultCode = ResultCode.Success
+                };
             }
             catch (Exception e)
             {
@@ -132,6 +136,10 @@ namespace Service
                     context.UserStocks.Remove(stock);
                 context.Wallet.Update(wallet);
                 await context.SaveChangesAsync();
+                return new ResponseModel<bool>
+                {
+                    Data = true, ResultCode = ResultCode.Success
+                };
             }
             catch (Exception e)
             {
